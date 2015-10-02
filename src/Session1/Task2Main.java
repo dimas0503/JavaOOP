@@ -9,8 +9,10 @@ public class Task2Main {
 
         Task2Student st1 = new Task2Student();
         Task2Student st2 = new Task2Student();
+/*
         st1.toString();
         st2.toString();
+*/
         System.out.println(st1.equals(st2));
 
 

@@ -12,7 +12,6 @@ public class Student {
     Student(){
         //http://www.jon.com.ua
         //TODO make compilable
-
     }
 
     Student(String name, int age, String gender, int motivation){
@@ -27,7 +26,6 @@ public class Student {
         this.age = age;
     }
 
-
     @Override
     public String toString(){
         System.out.println(
@@ -37,7 +35,6 @@ public class Student {
                         + "motivation" + this.motivation);
         return null;
     }
-
 
     public int getAge(){
         return this.age;
@@ -62,6 +59,6 @@ public class Student {
 
     @Override
     public int hashCode(){
-        return name.hashCode()+age;
+        return name.hashCode()+age+gender.hashCode()+motivation;
     }
 }
