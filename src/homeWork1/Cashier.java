@@ -125,12 +125,12 @@ public class Cashier {
         purchase = null;
     }
 
-    double closePurchase(){
+ /*   double closePurchase(){
         for (int i = 0; i < purchase.size(); i++) {
             System.out.println("Purchase:");
             System.out.println("*" + purchase.get(i).getArticle() + "-" + purchase.get(i).getCount());
         }
 
     }
-}
+*/}
 
