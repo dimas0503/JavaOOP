@@ -1,32 +1,42 @@
 package homeWork1;
 
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Dima on 02.10.2015.
  */
 public class Purchase {
-    private String article;
     private int count;
+    private HashMap<Product, Integer> productList = new HashMap<>();
 
-    Purchase(){};
-
-    Purchase(String article, int count){
-        this.article = article;
-        this.count = count;
+    public void addProduct(Product product, int count) {
+        if (productList.containsKey(product)){
+            productList.put(product,productList.get(product)+count);
+        }else {
+            productList.put(product,count);
+        }
     }
 
-    public String getArticle() {
-        return article;
+    public void removeProduct(Product product, int count) {
+        if (productList.containsKey(product)){
+
+            int prCount = (int) productList.get(product);
+            if (count >= prCount){
+                productList.remove(product);
+            }else {
+                productList.put(product,prCount - count);
+            }
+        }
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public void setArticle(String article) {
-        this.article = article;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
+    public double closePurchase(){
+        double totalSum = 0;
+        for (Map.Entry<Product,Integer> product: productList.entrySet()){
+            totalSum += product.getValue();
+        }
+        return totalSum;
     }
 }

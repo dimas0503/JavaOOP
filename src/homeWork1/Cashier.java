@@ -12,9 +12,8 @@
  */
 package homeWork1;
 
-import jdk.nashorn.internal.objects.NativeArray;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Cashier {
@@ -24,13 +23,19 @@ public class Cashier {
     private static boolean continueWork = true;
     private static Scanner sc;
     private static boolean authorized = false;
-    private static String articles[] = new String[] {"1","2","3","4","5"};
-    private static ArrayList<Purchase> purchase;
+    private static ArrayList<Product> productList = new ArrayList<>();
+    private static Purchase purchase;
     private static int option;
 
     public static void main(String[] args) {
 
         sc = new Scanner(System.in);
+
+        //create product list
+        productList.add(new Product("p1", 1.0));
+        productList.add(new Product("p2", 2.0));
+        productList.add(new Product("p3", 3.0));
+
         while (continueWork){
 
             if (authorized != true) {
@@ -52,24 +57,33 @@ public class Cashier {
             option = sc.nextInt();
             switch (option) {
                 case 1: createPurchase();
+                        break;
                 case 2:
                 {
-                    System.out.println("barcode and count:");
-                    addGoods(sc.next(),sc.nextInt());
+                    System.out.println("when finish, type y");
+                    String enterGoods = "y";
+                    while (enterGoods.equals("y")){
+                        System.out.println("barcode and count:");
+                        addGoods(sc.next(), sc.nextInt());
+                        System.out.println("Continue? Y/N");
+                        enterGoods = sc.next();
+                    }
+                    break;
                 }
                 case 3:
                 {
                     System.out.println("barcode and count:");
                     removeGoods(sc.next(),sc.nextInt());
+                    break;
                 }
                 case 4: cancelPurchase();
+                        break;
                 case 5:
                 {
-
+                    System.out.println("Summary: " + closePurchase());
+                    break;
                 }
             }
-
-
 
             finishWork();
         }
@@ -101,22 +115,26 @@ public class Cashier {
     }
 
     private static void createPurchase(){
-        purchase = new ArrayList<>();
+        purchase = new Purchase();
     }
 
     private  static void addGoods(String barCode, int count){
-        purchase.add(new Purchase(barCode,count));
+        if (purchase == null){
+            System.out.println("Create purchase first");
+            return;
+        }
+        for (Product product : productList){
+            if (product.getArticle().equals(barCode)){
+                purchase.addProduct(product, count);
+                return;
+            }
+        }
     }
 
     private static void removeGoods(String barCode, int count){
-        int i = purchase.size();
-        while (i > 0){
-            if (purchase.get(i).getArticle().equals(barCode)){
-                if (count == purchase.get(i).getCount()){
-                    purchase.remove(i);
-                }else{
-                    purchase.get(i).setCount(count);
-                }
+        for (Product product : productList){
+            if(product.getArticle().equals(barCode)){
+                purchase.removeProduct(product,count);
             }
         }
     }
@@ -125,12 +143,12 @@ public class Cashier {
         purchase = null;
     }
 
- /*   double closePurchase(){
-        for (int i = 0; i < purchase.size(); i++) {
-            System.out.println("Purchase:");
-            System.out.println("*" + purchase.get(i).getArticle() + "-" + purchase.get(i).getCount());
+    private static double  closePurchase(){
+        if (purchase == null){
+            System.out.println("Create purchase first");
+            return 0.0;
         }
-
+        return purchase.closePurchase();
     }
-*/}
+}
 
