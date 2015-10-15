@@ -30,13 +30,16 @@ public class MyArrayListMain{
 
         //for int
         MyArrayList<Integer> arr1 = new MyArrayList<>();
-        arr1.add(1);
-        arr1.add(2);
-        arr1.add(0,7);
-        System.out.println(arr1.get(0));
+        //arr1.add(1);
+        //arr1.add(2);
+        arr1.add(0, 7);
         arr1.add(1,8);
         System.out.println(arr1.get(0));
+/*
+
+        System.out.println(arr1.get(0));
         arr1.print();
+*/
 
 /*
         arr1.add(30);

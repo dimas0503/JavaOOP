@@ -70,6 +70,13 @@ public class MyArrayList <E> implements Iterable<E>{
     }
 
     public boolean add(int index, E value){
+
+        //if first element
+        if (maxIndex == -1){
+            add(value);
+            return true;
+        }
+
         //reject inserting  if out of bound
         if (index > maxIndex || index < 0){
             return false;
