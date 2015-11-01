@@ -10,19 +10,19 @@ import java.util.Map;
  */
 public class ServerSide implements Runnable {
     private Socket source;
-    private Thread thread;
-    private ChatServer server;
-    private Socket destination;
     private BufferedReader in;
-    private PrintWriter out;
     private HashMap<String,Socket> clientList;
-    private String[] parsedMessage;
 
-    public ServerSide(Socket source){
+    public ServerSide(Socket source, HashMap<String,Socket> clientList){
         this.source = source;
+        this.clientList = clientList;
         try {
             in = new BufferedReader(new InputStreamReader(source.getInputStream()));
-            //out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(source.getOutputStream()))/*destination.getOutputStream()))*/,true);
+            new PrintWriter(new BufferedWriter(new OutputStreamWriter(source.getOutputStream())),true).println("Type your nickname");
+            System.out.println("Waiting for nickname");
+            String[] message = in.readLine().split("/");
+            clientList.put(message[0],source);
+            System.out.println("Client was added:");
         }catch (IOException e){
             System.out.println("UNABLE TO CONNECT");
             e.printStackTrace();
@@ -31,14 +31,15 @@ public class ServerSide implements Runnable {
 
     @Override
     public void run() {
-        String message = "";
+        String[] message;
         try {
             while (true){
-                message = in.readLine();
-                parsedMessage = message.split("/");
+                System.out.println("Waiting for message");
+                message = in.readLine().split("/");
+                System.out.println("Message received");
                 System.out.println("MESSAGE");
-                for (int i = 0; i < parsedMessage.length; i++) {
-                    System.out.print(parsedMessage[i] + "/");
+                for (int i = 0; i < message.length; i++) {
+                    System.out.print(message[i] + "/");
                 }
 
                 System.out.println("CLIENTS");
@@ -46,21 +47,25 @@ public class ServerSide implements Runnable {
                     System.out.println(client.getKey()+" "+client.getValue());
                 }
 
-                out = new PrintWriter(
-                        new BufferedWriter(
-                                new OutputStreamWriter(
-                                        clientList.get(parsedMessage[1]).getOutputStream()
-                                )
-                        )/*destination.getOutputStream()))*/,true
-                );
-                //out.println(message);
+                if ( (message.length >1) && (clientList.get(message[1]) != null)){
+                    System.out.println("Sending message");
+                    new PrintWriter(
+                            new BufferedWriter(
+                                    new OutputStreamWriter(
+                                            clientList.get(message[1]).getOutputStream()
+                                    )
+                            ),true
+                    ).println(message[2]);
+/*
+                    String[] recepientsList = message[1].split(";");
+                    for (int i = 0; i < recepientsList.length-1; i++) {
+                        System.out.println("Send to:" + recepientsList[i]);
+                    }
+*/
+                }
             }
         }catch (IOException e){
             e.printStackTrace();
         }
-    }
-
-    public void updateClientList(HashMap<String,Socket> clientList){
-        this.clientList = clientList;
     }
 }
